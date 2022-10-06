@@ -1,0 +1,14 @@
+# hyper conversion text document
+miles feet miles mul 5280
+feet miles feet div 5280
+inch feet inch div 12
+feet inch feet mul 12
+yard feet yard mul 3
+feet yard feet div 3
+# conversion1 conversion2 [conversion1, conversion2, or result] [div, mul, add, sub] [value or conversion1, conversion2, or result] ...
+
+# make sure a comment token ('#') is followed by a whitespace otherwise it won't be recognized correctly
+
+
+# | first field | second field |  first expression  | second expression using the result of the previous expression |
+#  imaginaryUnit imaginaryUnit2 imaginaryUnit mul 12                    result mul imaginaryUnit2
