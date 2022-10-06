@@ -17,6 +17,15 @@ inches feet inches div 12,
 feet inches feet mul 12,
 yard feet yard mul 3,
 feet yard feet div 3,
+metres feet metres mul 3.28084,
+feet metres feet div 3.28084,
+kilometres metres kilometres mul 1000,
+metres kilometres metres div 1000,
+centimetres metres centimetres div 100,
+metres centimetres metres mul 100,
+centimetres milimetres centimetres mul 10
+milimetres centimetres milimetres div 10
+
 
 #
 # Time (currently unused)
