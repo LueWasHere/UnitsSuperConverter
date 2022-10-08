@@ -1,36 +1,40 @@
-from typing import final
+#from typing import final # unused
 
 
-def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. see conversions.hctd
+def parse(
+    parsse, hctd_src
+):  # hctd stands for hyper conversion text document. see conversions.hctd
     parsse = parsse.split(' ')
     unit = ""
     to = ""
     amount = ""
     try:
         amount = int(parsse[0])
-    except:
+    except:  # except what? FIXME: specify exception type
         return "Fail. Enter a number. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
     try:
         unit = parsse[1]
         to = parsse[2]
-    except:
+    except:  # oh my god stop using bare except
         return "Fail. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
 
     # for i in range()
 
-    abstract = ["sub", "add", "mul", "div"] # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
+    abstract = [
+        "sub", "add", "mul", "div"
+    ]  # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
     rep = ["-", "+", "*", "/"]
-    i =0
-    while i != len(hctd_src)-1:
+    i = 0
+    while i != len(hctd_src) - 1:
         print(i)
         try:
             if to == hctd_src[i][1] and unit == hctd_src[i][0]:
                 break
             else:
                 i += 1
-        except:
+        except:  # please stop using bare except
             i += 1
-    if i == len(hctd_src)-1:
+    if i == len(hctd_src) - 1:
         return f'Cannot convert between {unit} and {to}'
     print(i)
     print(to)
@@ -42,25 +46,27 @@ def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. s
         print(hctd_src[i][z])
         try:
             num = int(hctd_src[i][z])
-        except:
+        except:  # stop using bare except
             num = None
         try:
             print(hctd_src[i][z])
             if hctd_src[i][z] == unit:
                 build_expression += str(amount)
             elif hctd_src[i][z] == to:
-                raise ValueError("Error while parsing hctd, cannot use the conversion unit in a hctd expression") # Better name: 'error: you can't convert to the same unit!'
+                raise ValueError(
+                    "Error while parsing hctd, cannot use the conversion unit in a hctd expression"
+                )  # Better name: 'error: you can't convert to the same unit!'
             elif num != None:
                 build_expression += str(num)
             elif hctd_src[i][z] in abstract:
                 build_expression += rep[abstract.index(hctd_src[i][z])]
-            elif hctd_src[i][z][len(hctd_src[i][z])-1] == ",":
-                build_expression += hctd_src[i][z][0:len(hctd_src[i][z])-1]
+            elif hctd_src[i][z][len(hctd_src[i][z]) - 1] == ",":
+                build_expression += hctd_src[i][z][0:len(hctd_src[i][z]) - 1]
                 expressions.append(build_expression)
                 build_expression = ""
             elif hctd_src[i][z] == "result":
                 pass
-        except:
+        except:  # stop using bare except
             pass
     print(expressions)
     final_expression = "(" * len(expressions)
@@ -68,6 +74,7 @@ def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. s
         final_expression += f"{expressions[i]})"
     print(final_expression)
     return str(eval(final_expression)) + " " + to
+
 
 def parse_hctd(parsse):
     print("PARSING")
@@ -86,7 +93,8 @@ def parse_hctd(parsse):
         parsse.append(build)
         build = ""
         i += 1
-    for i in range(0, len(parsse)):
+    for i, parsse in enumerate(parsse):
+        #for i in range(0, len(parsse)): # unused. enumerate instead.
         parsse[i] = parsse[i].split(" ")
     print(f"END: {parsse}")
     return parsse

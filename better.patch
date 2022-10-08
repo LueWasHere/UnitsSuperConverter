@@ -1,0 +1,300 @@
+diff --git a/.devcontainer/Dockerfile b/.devcontainer/Dockerfile
+new file mode 100644
+index 0000000..b429c19
+--- /dev/null
++++ b/.devcontainer/Dockerfile
+@@ -0,0 +1,21 @@
++# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/python-3/.devcontainer/base.Dockerfile
++
++# [Choice] Python version (use -bullseye variants on local arm64/Apple Silicon): 3, 3.10, 3.9, 3.8, 3.7, 3.6, 3-bullseye, 3.10-bullseye, 3.9-bullseye, 3.8-bullseye, 3.7-bullseye, 3.6-bullseye, 3-buster, 3.10-buster, 3.9-buster, 3.8-buster, 3.7-buster, 3.6-buster
++ARG VARIANT="3.10-bullseye"
++FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
++
++# [Choice] Node.js version: none, lts/*, 16, 14, 12, 10
++ARG NODE_VERSION="none"
++RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
++
++# [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
++# COPY requirements.txt /tmp/pip-tmp/
++# RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
++#    && rm -rf /tmp/pip-tmp
++
++# [Optional] Uncomment this section to install additional OS packages.
++# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
++#     && apt-get -y install --no-install-recommends <your-package-list-here>
++
++# [Optional] Uncomment this line to install global node packages.
++# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+\ No newline at end of file
+diff --git a/.devcontainer/devcontainer.json b/.devcontainer/devcontainer.json
+new file mode 100644
+index 0000000..591cefc
+--- /dev/null
++++ b/.devcontainer/devcontainer.json
+@@ -0,0 +1,57 @@
++// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
++// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/python-3
++{
++	"name": "Python 3",
++	"build": {
++		"dockerfile": "Dockerfile",
++		"context": "..",
++		"args": { 
++			// Update 'VARIANT' to pick a Python version: 3, 3.10, 3.9, 3.8, 3.7, 3.6
++			// Append -bullseye or -buster to pin to an OS version.
++			// Use -bullseye variants on local on arm64/Apple Silicon.
++			"VARIANT": "3.10",
++			// Options
++			"NODE_VERSION": "none"
++		}
++	},
++
++	// Configure tool-specific properties.
++	"customizations": {
++		// Configure properties specific to VS Code.
++		"vscode": {
++			// Set *default* container specific settings.json values on container create.
++			"settings": { 
++				"python.defaultInterpreterPath": "/usr/local/bin/python",
++				"python.linting.enabled": true,
++				"python.linting.pylintEnabled": true,
++				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
++				"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
++				"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
++				"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
++				"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
++				"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
++				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
++				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
++				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
++			},
++			
++			// Add the IDs of extensions you want installed when the container is created.
++			"extensions": [
++				"ms-python.python",
++				"ms-python.vscode-pylance"
++			]
++		}
++	},
++
++	// Use 'forwardPorts' to make a list of ports inside the container available locally.
++	// "forwardPorts": [],
++
++	// Use 'postCreateCommand' to run commands after the container is created.
++	// "postCreateCommand": "pip3 install --user -r requirements.txt",
++
++	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
++	"remoteUser": "vscode",
++	"features": {
++		"git": "latest"
++	}
++}
+diff --git a/.vscode/settings.json b/.vscode/settings.json
+new file mode 100644
+index 0000000..12901f9
+--- /dev/null
++++ b/.vscode/settings.json
+@@ -0,0 +1,3 @@
++{
++    "python.analysis.typeCheckingMode": "basic"
++}
+diff --git a/bot.py b/bot.py
+index 022190d..d551e5f 100644
+--- a/bot.py
++++ b/bot.py
+@@ -6,12 +6,13 @@ from telegram.ext.messagehandler import MessageHandler
+ from telegram.ext.filters import Filters
+ import conversion_parser as cplib
+ 
+-mk = 0
+-unit = ""
+-unit_to = ""
++MK = 0
++UNIT = ""
++UNIT_TO = ""
+ 
+ try:
+-    with open("env.txt", "r") as ENVFile:
++    with open("env.txt", "r", encoding="utf8"
++              ) as ENVFile:  # make sure you specify the encoding (utf8, ty)
+         token = ENVFile.read()
+         ENVFile.close()
+ except FileNotFoundError:
+@@ -21,44 +22,44 @@ except FileExistsError:
+     print("File does not exist file I/O Err.")
+     exit(1)
+ 
+-updater = Updater(token,
+-                  use_context=True)
++updater = Updater(token, use_context=True)
+ 
+ print(f"Logged in as {updater.bot.id}")
+ 
+ 
+-def start(update: Update, context: CallbackContext):
+-    update.message.reply_text(
+-        "Ok!")
++def start(update: Update,
++          context: CallbackContext):  # FIXME: Unused argument 'context' - why?
++    update.message.reply_text("Ok!")
+ 
+ 
+-def define_unit(update: Update, context: CallbackContext):
+-    pass
++def define_unit(update: Update, context: CallbackContext
++                ):  # FIXME: See above. Unused 'update' and 'context'
++    """Dummy for now!"""
+ 
+ 
+-def help(update: Update, context: CallbackContext):
++def helpcmd(update: Update, context: CallbackContext):
+     update.message.reply_text(
+-        "/help - Display this message\n/start - Check if the bot is ready\n/define_unit OR /du [unit] [convert] [how_many_in] - Define a new unit that USC will add to its database of units where unit is the unit you are defining, convert is the unit you're converting to, and how_many_in is how many units are in the unit you're converting to.")
++        "/help - Display this message\n/start - Check if the bot is ready\n/define_unit OR /du [unit] [convert] [how_many_in] - Define a new unit that USC will add to its database of units where unit is the unit you are defining, convert is the unit you're converting to, and how_many_in is how many units are in the unit you're converting to."
++    )
+ 
+ 
+ def unknown(update: Update, context: CallbackContext):
+-    global hctd
++    #global hctd # why tf is this here? hctd is never defined...
+     if update.message.text[0] == '/':
+-        update.message.reply_text(
+-            "Sorry '%s' is not a command" % update.message.text)
++        update.message.reply_text("Sorry '%s' is not a command" %
++                                  update.message.text)
+     else:
+-        update.message.reply_text(
+-            str(cplib.parse(update.message.text, hctd)))
++        update.message.reply_text(str(cplib.parse(update.message.text, hctd)))
+ 
+ 
+ updater.dispatcher.add_handler(CommandHandler('start', start))
+-updater.dispatcher.add_handler(CommandHandler('help', help))
++updater.dispatcher.add_handler(CommandHandler('help', helpcmd))
+ updater.dispatcher.add_handler(CommandHandler('du', define_unit))
+ updater.dispatcher.add_handler(CommandHandler('define_unit', define_unit))
+ 
+ updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
+ 
+-with open("conversions.hctd", "r") as conversions:
++with open("conversions.hctd", "r", encoding="utf8") as conversions:
+     hctd = conversions.read()
+     conversions.close()
+ hctd = cplib.parse_hctd(hctd)
+diff --git a/conversion_parser.py b/conversion_parser.py
+index e47d332..3ec24b7 100644
+--- a/conversion_parser.py
++++ b/conversion_parser.py
+@@ -1,36 +1,40 @@
+-from typing import final
++#from typing import final # unused
+ 
+ 
+-def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. see conversions.hctd
++def parse(
++    parsse, hctd_src
++):  # hctd stands for hyper conversion text document. see conversions.hctd
+     parsse = parsse.split(' ')
+     unit = ""
+     to = ""
+     amount = ""
+     try:
+         amount = int(parsse[0])
+-    except:
++    except:  # except what? FIXME: specify exception type
+         return "Fail. Enter a number. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
+     try:
+         unit = parsse[1]
+         to = parsse[2]
+-    except:
++    except:  # oh my god stop using bare except
+         return "Fail. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
+ 
+     # for i in range()
+ 
+-    abstract = ["sub", "add", "mul", "div"] # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
++    abstract = [
++        "sub", "add", "mul", "div"
++    ]  # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
+     rep = ["-", "+", "*", "/"]
+-    i =0
+-    while i != len(hctd_src)-1:
++    i = 0
++    while i != len(hctd_src) - 1:
+         print(i)
+         try:
+             if to == hctd_src[i][1] and unit == hctd_src[i][0]:
+                 break
+             else:
+                 i += 1
+-        except:
++        except:  # please stop using bare except
+             i += 1
+-    if i == len(hctd_src)-1:
++    if i == len(hctd_src) - 1:
+         return f'Cannot convert between {unit} and {to}'
+     print(i)
+     print(to)
+@@ -42,25 +46,27 @@ def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. s
+         print(hctd_src[i][z])
+         try:
+             num = int(hctd_src[i][z])
+-        except:
++        except:  # stop using bare except
+             num = None
+         try:
+             print(hctd_src[i][z])
+             if hctd_src[i][z] == unit:
+                 build_expression += str(amount)
+             elif hctd_src[i][z] == to:
+-                raise ValueError("Error while parsing hctd, cannot use the conversion unit in a hctd expression") # Better name: 'error: you can't convert to the same unit!'
++                raise ValueError(
++                    "Error while parsing hctd, cannot use the conversion unit in a hctd expression"
++                )  # Better name: 'error: you can't convert to the same unit!'
+             elif num != None:
+                 build_expression += str(num)
+             elif hctd_src[i][z] in abstract:
+                 build_expression += rep[abstract.index(hctd_src[i][z])]
+-            elif hctd_src[i][z][len(hctd_src[i][z])-1] == ",":
+-                build_expression += hctd_src[i][z][0:len(hctd_src[i][z])-1]
++            elif hctd_src[i][z][len(hctd_src[i][z]) - 1] == ",":
++                build_expression += hctd_src[i][z][0:len(hctd_src[i][z]) - 1]
+                 expressions.append(build_expression)
+                 build_expression = ""
+             elif hctd_src[i][z] == "result":
+                 pass
+-        except:
++        except:  # stop using bare except
+             pass
+     print(expressions)
+     final_expression = "(" * len(expressions)
+@@ -69,6 +75,7 @@ def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. s
+     print(final_expression)
+     return str(eval(final_expression)) + " " + to
+ 
++
+ def parse_hctd(parsse):
+     print("PARSING")
+     keep = parsse.split('\n')
+@@ -86,7 +93,8 @@ def parse_hctd(parsse):
+         parsse.append(build)
+         build = ""
+         i += 1
+-    for i in range(0, len(parsse)):
++    for i, parsse in enumerate(parsse):
++        #for i in range(0, len(parsse)): # unused. enumerate instead.
+         parsse[i] = parsse[i].split(" ")
+     print(f"END: {parsse}")
+     return parsse
+diff --git a/tz_conversion.py b/tz_conversion.py
+index c547b88..d64a668 100644
+--- a/tz_conversion.py
++++ b/tz_conversion.py
+@@ -6,6 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+ # TODO: fix this so that it works in bot.py
+ # maybe even add defitions to conversions.hctd instead of pytz's timezone list
+ 
++
+ def convert_time(bot, update):
+     message = update.message.text
+     if len(message.split()) == 3:
