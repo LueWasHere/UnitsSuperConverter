@@ -1,25 +1,21 @@
 def parse(
-    parsse, hctd_src
+        parsse, hctd_src
 ):  # hctd stands for hyper conversion text document. see conversions.hctd
     parsse = parsse.split(' ')
-    unit = ""
-    to = ""
-    amount = ""
+    # here lies three unused variables
     try:
         amount = int(parsse[0])
-    except:
-        return "Fail. Enter a number. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
+    except ValueError:
+        return "Fail Enter a number. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
     try:
         unit = parsse[1]
         to = parsse[2]
-    except:
+    except IndexError:
         return "Fail. Conversion structure: [amount of units] [initial unit] [new, converted unit]"
 
     # for i in range()
 
-    abstract = [
-        "sub", "add", "mul", "div"
-    ]
+    abstract = ["sub", "add", "mul", "div"]
     rep = ["-", "+", "*", "/"]
     i = 0
     while i != len(hctd_src) - 1:
@@ -34,7 +30,7 @@ def parse(
                 unit = hctd_src[i][0]
             else:
                 i += 1
-        except:
+        except IndexError:
             i += 1
     if i == len(hctd_src) - 1:
         return f'Cannot convert between {unit} and {to}'
@@ -43,12 +39,12 @@ def parse(
     print(unit)
     build_expression = ""
     expressions = []
-    num = None
+    # num = None # unused
     for z in range(2, len(hctd_src[i])):
         print(hctd_src[i][z])
         try:
             num = int(hctd_src[i][z])
-        except:
+        except ValueError:
             num = None
         try:
             print(hctd_src[i][z])
@@ -58,7 +54,7 @@ def parse(
                 raise ValueError(
                     "Error while parsing hctd, cannot use the conversion unit in a hctd expression"
                 )  # Better name: 'error: you can't convert to the same unit!'
-            elif num != None:
+            elif num is not None:
                 build_expression += str(num)
             elif hctd_src[i][z] in abstract:
                 build_expression += rep[abstract.index(hctd_src[i][z])]
@@ -68,7 +64,7 @@ def parse(
                 build_expression = ""
             elif hctd_src[i][z] == "result":
                 pass
-        except:
+        except ValueError:
             pass
     print(expressions)
     final_expression = "(" * len(expressions)
@@ -76,6 +72,12 @@ def parse(
         final_expression += f"{expressions[i]})"
     print(final_expression)
     return str(eval(final_expression)) + " " + to
+
+
+def end(build):  # you called for this function but it's not defined
+    # you should probably remove this
+    # or define it
+    pass
 
 
 def parse_hctd(parsse):
@@ -95,11 +97,12 @@ def parse_hctd(parsse):
             if not comment:
                 build += keep[i][j]
         comment = False
-        parsse.app
+        parsse.append(build)
         end(build)
         build = ""
         i += 1
-    for i in range(0, len(parsse)):
+    for i, parsse in enumerate(parsse):
+        # for i in range(0, len(parsse)): # unused. enumerate instead.
         parsse[i] = parsse[i].split(" ")
     print(f"END: {parsse}")
     return parsse

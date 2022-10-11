@@ -6,6 +6,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 # TODO: fix this so that it works in bot.py
 # maybe even add defitions to conversions.hctd instead of pytz's timezone list
 
+
 def convert_time(bot, update):
     message = update.message.text
     if len(message.split()) == 3:
