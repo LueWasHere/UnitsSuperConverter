@@ -8,6 +8,20 @@
 # | first field | second field |  first expression  | second expression using the result of the previous expression |
 #  imaginaryUnit imaginaryUnit2 imaginaryUnit mul 12                    result mul imaginaryUnit2
 
+# units shouldn't be capitalized unless it is in the aliasing section (see below)
+# Aliasing
+*_ c GOTO celsius, # any line that begins with *_ is an alias
+*_ f GOTO fahrenheit,
+*_ mi GOTO,
+*_ in GOTO,
+*_ yd GOTO,
+*_ km GOTO,
+*_ m GOTO,
+*_ cm GOTO,
+*_ mm GOTO,
+*_ "Universal Coordinated Standard Time" GOTO,
+*_ "Mountain Time" GOTO,
+
 #
 # Distance
 #
@@ -26,14 +40,11 @@ metres centimetres metres mul 100,
 centimetres milimetres centimetres mul 10
 milimetres centimetres milimetres div 10
 
-
-#
-# Time (currently unused)
 #
 # UTC TO MDT
-#utc mdt utc sub 600,
+utc mdt utc sub 600,
 # MDT TO UTC
-#mdt utc mdt add 600,
+mdt utc mdt add 600,
 
 #
 # Temperature

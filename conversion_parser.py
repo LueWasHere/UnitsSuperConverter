@@ -1,6 +1,3 @@
-#from typing import final # unused
-
-
 def parse(
     parsse, hctd_src
 ):  # hctd stands for hyper conversion text document. see conversions.hctd
@@ -22,7 +19,7 @@ def parse(
 
     abstract = [
         "sub", "add", "mul", "div"
-    ]  # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
+    ]
     rep = ["-", "+", "*", "/"]
     i = 0
     while i != len(hctd_src) - 1:
@@ -30,6 +27,11 @@ def parse(
         try:
             if to == hctd_src[i][1] and unit == hctd_src[i][0]:
                 break
+            elif hctd_src[i][0] == "*_" and hctd_src[i][1] == unit and hctd_src[i][2] == "GOTO":
+                sv = i
+                while hctd_src[i][0] != hctd_src[sv][3]:
+                    i += 1
+                unit = hctd_src[i][0]
             else:
                 i += 1
         except:  # please stop using bare except
@@ -83,14 +85,18 @@ def parse_hctd(parsse):
     comment = False
     build = ""
     i = 0
+
     while i != len(keep):
         for j in range(0, len(keep[i])):
             if keep[i][j] == '#':
                 comment = True
-            if comment == False:
+            elif keep[i][j] + keep[i][j + 1] == "*_":
+                def_alias = True
+            if not comment:
                 build += keep[i][j]
         comment = False
-        parsse.append(build)
+        parsse.app
+        end(build)
         build = ""
         i += 1
     for i, parsse in enumerate(parsse):
