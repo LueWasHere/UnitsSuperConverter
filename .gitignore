@@ -2,3 +2,5 @@ obj/*
 bin/*
 env.txt
 __pycache__/*
+# I HATE YOU INTELLIJ
+.idea/
