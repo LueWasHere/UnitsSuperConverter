@@ -1,7 +1,6 @@
-from typing import final
-
-
-def parse(parsse, hctd_src, aliases): # hctd stands for hyper conversion text document. see conversions.hctd
+def parse(
+    parsse, hctd_src
+):  # hctd stands for hyper conversion text document. see conversions.hctd
     parsse = parsse.split(' ')
     unit = ""
     to = ""
@@ -18,24 +17,26 @@ def parse(parsse, hctd_src, aliases): # hctd stands for hyper conversion text do
 
     # for i in range()
 
-    abstract = ["sub", "add", "mul", "div"] # Why do we use words instead of symbols in the .hctd file? readablity, and also universiality when getting custom units from users on telegram
+    abstract = [
+        "sub", "add", "mul", "div"
+    ]
     rep = ["-", "+", "*", "/"]
-    i =0
-    while i != len(hctd_src)-1:
+    i = 0
+    while i != len(hctd_src) - 1:
         print(i)
         try:
             if to == hctd_src[i][1] and unit == hctd_src[i][0]:
                 break
+            elif hctd_src[i][0] == "*_" and hctd_src[i][1] == unit and hctd_src[i][2] == "GOTO":
+                sv = i
+                while hctd_src[i][0] != hctd_src[sv][3]:
+                    i += 1
+                unit = hctd_src[i][0]
             else:
                 i += 1
-            try:
-                print(f"{aliases[unit}]")
-                
-            except:
-                pass
         except:
             i += 1
-    if i == len(hctd_src)-1:
+    if i == len(hctd_src) - 1:
         return f'Cannot convert between {unit} and {to}'
     print(i)
     print(to)
@@ -54,13 +55,15 @@ def parse(parsse, hctd_src, aliases): # hctd stands for hyper conversion text do
             if hctd_src[i][z] == unit:
                 build_expression += str(amount)
             elif hctd_src[i][z] == to:
-                raise ValueError("Error while parsing hctd, cannot use the conversion unit in a hctd expression") # Better name: 'error: you can't convert to the same unit!'
+                raise ValueError(
+                    "Error while parsing hctd, cannot use the conversion unit in a hctd expression"
+                )  # Better name: 'error: you can't convert to the same unit!'
             elif num != None:
                 build_expression += str(num)
             elif hctd_src[i][z] in abstract:
                 build_expression += rep[abstract.index(hctd_src[i][z])]
-            elif hctd_src[i][z][len(hctd_src[i][z])-1] == ",":
-                build_expression += hctd_src[i][z][0:len(hctd_src[i][z])-1]
+            elif hctd_src[i][z][len(hctd_src[i][z]) - 1] == ",":
+                build_expression += hctd_src[i][z][0:len(hctd_src[i][z]) - 1]
                 expressions.append(build_expression)
                 build_expression = ""
             elif hctd_src[i][z] == "result":
@@ -74,30 +77,29 @@ def parse(parsse, hctd_src, aliases): # hctd stands for hyper conversion text do
     print(final_expression)
     return str(eval(final_expression)) + " " + to
 
+
 def parse_hctd(parsse):
     print("PARSING")
     keep = parsse.split('\n')
     parsse = []
     comment = False
-    def_alias = False
     build = ""
     i = 0
-    aliases = {}
-    
+
     while i != len(keep):
         for j in range(0, len(keep[i])):
             if keep[i][j] == '#':
                 comment = True
-            elif keep[i][j]+keep[i][j+1] == "*_":
+            elif keep[i][j] + keep[i][j + 1] == "*_":
                 def_alias = True
-            if comment == False:
+            if not comment:
                 build += keep[i][j]
         comment = False
-        def_alias = False
-        parsse.append(build)
+        parsse.app
+        end(build)
         build = ""
         i += 1
     for i in range(0, len(parsse)):
         parsse[i] = parsse[i].split(" ")
     print(f"END: {parsse}")
-    return [parsse, aliases]
+    return parsse

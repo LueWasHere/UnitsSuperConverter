@@ -8,19 +8,19 @@
 # | first field | second field |  first expression  | second expression using the result of the previous expression |
 #  imaginaryUnit imaginaryUnit2 imaginaryUnit mul 12                    result mul imaginaryUnit2
 
-# unless it is an alias a unit will NEVER be capitalized in an hctd file
+# units shouldn't be capitalized unless it is in the aliasing section (see below)
 # Aliasing
-*_ c celsius,
-*_ f fahrenheit,
-*_ mi miles,
-*_ in inches,
-*_ yd yard,
-*_ km kilometres,
-*_ m metres,
-*_ cm centimetres,
-*_ mm milimetres,
-*_ "Universal Coordinated Standard Time" utc,
-*_ "Mountain Time" mt,
+*_ c GOTO celsius, # any line that begins with *_ is an alias
+*_ f GOTO fahrenheit,
+*_ mi GOTO,
+*_ in GOTO,
+*_ yd GOTO,
+*_ km GOTO,
+*_ m GOTO,
+*_ cm GOTO,
+*_ mm GOTO,
+*_ "Universal Coordinated Standard Time" GOTO,
+*_ "Mountain Time" GOTO,
 
 #
 # Distance
