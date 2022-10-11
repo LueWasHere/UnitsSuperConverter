@@ -8,6 +8,19 @@
 # | first field | second field |  first expression  | second expression using the result of the previous expression |
 #  imaginaryUnit imaginaryUnit2 imaginaryUnit mul 12                    result mul imaginaryUnit2
 
+# Aliasing
+*_ c celsius,
+*_ f fahrenheit,
+*_ mi miles,
+*_ in inches,
+*_ yd yard,
+*_ km kilometres,
+*_ m metres,
+*_ cm centimetres,
+*_ mm milimetres,
+*_ "Universal Coordinated Standard Time" utc,
+*_ "Mountain Time" mt,
+
 #
 # Distance
 #
