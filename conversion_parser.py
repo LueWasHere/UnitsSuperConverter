@@ -1,7 +1,7 @@
 from typing import final
 
 
-def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. see conversions.hctd
+def parse(parsse, hctd_src, aliases): # hctd stands for hyper conversion text document. see conversions.hctd
     parsse = parsse.split(' ')
     unit = ""
     to = ""
@@ -28,6 +28,11 @@ def parse(parsse, hctd_src): # hctd stands for hyper conversion text document. s
                 break
             else:
                 i += 1
+            try:
+                print(f"{aliases[unit}]")
+                
+            except:
+                pass
         except:
             i += 1
     if i == len(hctd_src)-1:
@@ -74,19 +79,25 @@ def parse_hctd(parsse):
     keep = parsse.split('\n')
     parsse = []
     comment = False
+    def_alias = False
     build = ""
     i = 0
+    aliases = {}
+    
     while i != len(keep):
         for j in range(0, len(keep[i])):
             if keep[i][j] == '#':
                 comment = True
+            elif keep[i][j]+keep[i][j+1] == "*_":
+                def_alias = True
             if comment == False:
                 build += keep[i][j]
         comment = False
+        def_alias = False
         parsse.append(build)
         build = ""
         i += 1
     for i in range(0, len(parsse)):
         parsse[i] = parsse[i].split(" ")
     print(f"END: {parsse}")
-    return parsse
+    return [parsse, aliases]
